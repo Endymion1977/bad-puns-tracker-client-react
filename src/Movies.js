@@ -3,6 +3,7 @@ import { Header, Message, Table } from 'semantic-ui-react';
 import { withAuth } from '@okta/okta-react';
 
 import { API_BASE_URL } from './config'
+import MovieForm from './MovieForm';
 
 export default withAuth(class Movies extends Component {
 
@@ -12,10 +13,17 @@ export default withAuth(class Movies extends Component {
             movies: null,
             isLoading: null
         };
+        this.onAddition = this.onAddition.bind(this);
     }
 
     componentDidMount() {
         this.getMovies();
+    }
+
+    onAddition(movie) {
+        this.setState({
+            movies: [...this.state.movies, movie]
+        })
     }
 
     async getMovies() {
@@ -67,6 +75,7 @@ export default withAuth(class Movies extends Component {
                             )}
                             </tbody>
                         </Table>
+                        <MovieForm onAddition={this.onAddition} />
                     </div>
                 }
             </div>
