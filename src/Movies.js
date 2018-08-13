@@ -4,6 +4,7 @@ import { withAuth } from '@okta/okta-react';
 
 import { API_BASE_URL } from './config'
 import MovieForm from './MovieForm';
+import IncreaseCountButton from './IncreaseCountButton';
 
 export default withAuth(class Movies extends Component {
 
@@ -14,16 +15,11 @@ export default withAuth(class Movies extends Component {
             isLoading: null
         };
         this.onAddition = this.onAddition.bind(this);
+        this.onIncrease = this.onIncrease.bind(this);
     }
 
     componentDidMount() {
         this.getMovies();
-    }
-
-    onAddition(movie) {
-        this.setState({
-            movies: [...this.state.movies, movie]
-        })
     }
 
     async getMovies() {
@@ -43,6 +39,21 @@ export default withAuth(class Movies extends Component {
                 console.error(err);
             }
         }
+    }
+
+    onAddition(movie) {
+        this.setState({
+            movies: [...this.state.movies, movie]
+        })
+    }
+
+    onIncrease(data, id) {
+        let movies = this.state.movies;
+        let movie = movies.find(movie => movie.id === id);
+        movie.count = data.count;
+        this.setState({
+            movies: movies
+        })
     }
 
     render() {
@@ -69,7 +80,7 @@ export default withAuth(class Movies extends Component {
                                             <td>{movie.title}</td>
                                             <td>{movie.count}</td>
                                             <td>
-                                                Increase Count button
+                                                <IncreaseCountButton onIncrease={this.onIncrease} movieId={movie.id} />
                                             </td>
                                         </tr>
                             )}
